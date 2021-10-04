@@ -20,7 +20,7 @@
 <style lang="stylus" scoped>
   @import "../../common/stylus/mixins.styl"
   .header
-    background-color #02a774
+    background-color #3190e8
     position fixed
     z-index 100
     left 0

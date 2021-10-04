@@ -11,7 +11,7 @@ export default function ajax(url, data={}, type="GET") {
       // 准备 url query 参数数据
       let dataStr = ''  //数据拼接字符串
       Object.keys(data).forEach(key => {//Object.keys()将对象的属性名变成数组
-        dataStr += data + '=' + data[key] + '&'
+        dataStr += key + '=' + data[key] + '&'
       })
       if(dataStr !== ''){
         dataStr = dataStr.substring(0, dataStr.lastIndexOf('&'))

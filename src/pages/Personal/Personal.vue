@@ -2,17 +2,17 @@
   <section class="profile">
     <HeaderTop title="我的"/>
     <section class="profile-number">
-      <router-link class="profile-link" to="/login">
+      <router-link class="profile-link" :to="userInfo._id ? '/userinfo' : '/login' ">
         <div class="profile_image">
           <i class="iconfont icon-geren"></i>
         </div>
         <div class="user-info">
-          <p class="user-info-top">登录/注册</p>
+          <p class="user-info-top" v-if="!userInfo.email">{{userInfo.name || '登录/注册'}}</p>
           <p>
             <span class="user-icon">
-              <i class="iconfont icon-shouji icon-mobile"></i>
+              <i class="iconfont icon-youxiang icon-mobile"></i>
             </span>
-            <span class="icon-mobile-number">暂无绑定手机号</span>
+            <span class="icon-mobile-number">{{userInfo.email || '暂无绑定邮箱号'}}</span>
           </p>
         </div>
         <span class="arrow">
@@ -88,14 +88,32 @@
         </div>
       </a>
     </section>
+    <section class="profile_my_order border-1px">
+      <mt-button type="danger" size="large" @click="logout" v-if="userInfo._id">退出登录</mt-button>
+    </section>
   </section>
 </template>
 
 <script>
+  import {mapState} from 'vuex'
   import HeaderTop from "../../component/HeaderTop/HeaderTop";
+  import {MessageBox,Toast} from 'mint-ui'
   export default {
+    computed:{
+      ...mapState(['userInfo'])
+    },
     components:{
       HeaderTop
+    },
+    methods:{
+      logout(){
+        MessageBox.confirm('确定退出登录吗？').then(action=>{
+          //发送退出登录的请求
+          // console.log("已经退出")
+          this.$store.dispatch('logout')
+          Toast("退出登录完成")
+        })
+      }
     }
   }
 </script>
@@ -111,7 +129,7 @@
         clearFix()
         position relative
         display block
-        background #02a774
+        background #3190e8
         padding 20px 10px
         .profile_image
           float left
@@ -128,6 +146,7 @@
           margin-top 8px
           margin-left 15px
           p
+            clearFix()
             font-weight: 700
             font-size 18px
             color #fff
@@ -135,11 +154,12 @@
               padding-bottom 8px
             .user-icon
               display inline-block
-              margin-right -5px
+              float left
+              margin-right 5px
               width 20px
               height 20px
               .icon-mobile
-                font-size 20px
+                font-size 22px
                 vertical-align text-top
             .icon-mobile-number
               font-size 14px

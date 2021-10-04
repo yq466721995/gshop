@@ -1,123 +1,20 @@
 <template>
   <section class="msite">
     <!--首页头部-->
-    <HeaderTop title="昌平区北七家宏福科技园(337省道北)">
-      <span class="header_search" slot="left">
+    <HeaderTop :title="address.name">
+      <router-link class="header_search" slot="left" to="/search">
         <i class="iconfont icon-sousuo"></i>
-      </span>
-      <span class="header_login" slot="right">
-        <span class="header_login_text">登录|注册</span>
-      </span>
+      </router-link>
+      <router-link class="header_login" slot="right" :to="userInfo._id ? '/userinfo' : '/login'">
+        <span class="header_login_text" v-if="!userInfo._id">
+          登录|注册
+        </span>
+        <span class="header_login_text" v-else>
+          <i class="iconfont icon-fcstubiao"></i>
+        </span>
+      </router-link>
     </HeaderTop>
     <!--首页导航-->
-    <!--<nav class="msite_nav">
-      <div class="swiper-container">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/1.jpg">
-              </div>
-              <span>甜品饮品</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/2.jpg">
-              </div>
-              <span>商超便利</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/3.jpg">
-              </div>
-              <span>美食</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/4.jpg">
-              </div>
-              <span>简餐</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/5.jpg">
-              </div>
-              <span>新店特惠</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/6.jpg">
-              </div>
-              <span>准时达</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/7.jpg">
-              </div>
-              <span>预订早餐</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/8.jpg">
-              </div>
-              <span>土豪推荐</span>
-            </a>
-          </div>
-          <div class="swiper-slide">
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/9.jpg">
-              </div>
-              <span>甜品饮品</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/10.jpg">
-              </div>
-              <span>商超便利</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/11.jpg">
-              </div>
-              <span>美食</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/12.jpg">
-              </div>
-              <span>简餐</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/13.jpg">
-              </div>
-              <span>新店特惠</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/14.jpg">
-              </div>
-              <span>准时达</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/1.jpg">
-              </div>
-              <span>预订早餐</span>
-            </a>
-            <a href="javascript:" class="link_to_food">
-              <div class="food_container">
-                <img src="../../component/Nav/images/nav/2.jpg">
-              </div>
-              <span>土豪推荐</span>
-            </a>
-          </div>
-        </div>
-        &lt;!&ndash; Add Pagination &ndash;&gt;
-        <div class="swiper-pagination"></div>
-      </div>
-    </nav>-->
     <Nav/>
     <!--首页附近商家-->
     <div class="msite_shop_list">
@@ -134,12 +31,22 @@
   import HeaderTop from "../../component/HeaderTop/HeaderTop";
   import Nav from "../../component/Nav/Nav";
   import ShopList from "../../component/ShopList/ShopList";
+  import {mapState} from 'vuex'
   export default {
     components:{
       HeaderTop,
       Nav,
       ShopList
     },
+    computed:{
+      ...mapState(['address','userInfo'])
+    },
+    mounted() {
+      //发请求获取食品分类数据
+      this.$store.dispatch('getCategorys')
+      //发请求获取店铺数据
+      this.$store.dispatch('getShops')
+    }
   }
 </script>
 
@@ -147,16 +54,16 @@
   @import "../../common/stylus/mixins.styl"
   .msite  //首页
     width 100%
-      .header_search
-        position absolute
-        left 15px
-        top 50%
-        transform translateY(-50%)
-        width 10%
-        height 50%
-        .icon-sousuo
-          font-size 25px
-          color #fff
+    .header_search
+      position absolute
+      left 15px
+      top 50%
+      transform translateY(-50%)
+      width 10%
+      height 50%
+      .icon-sousuo
+        font-size 25px
+        color #fff
       .header_title
         position absolute
         top 50%
@@ -169,15 +76,17 @@
           font-size 20px
           color #fff
           display block
-      .header_login
-        font-size 14px
+    .header_login
+      font-size 14px
+      color #fff
+      position absolute
+      right 15px
+      top 50%
+      transform translateY(-50%)
+      .header_login_text
         color #fff
-        position absolute
-        right 15px
-        top 50%
-        transform translateY(-50%)
-        .header_login_text
-          color #fff
+        .icon-fcstubiao
+          font-size 25px
     .msite_shop_list
       top-border-1px(#e4e4e4)
       margin-top 10px

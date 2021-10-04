@@ -6,12 +6,22 @@
 </template>
 
 <script>
-import FooterGuide from './component/FooterGuide/FooterGuide.vue'
-export default {
-    components:{
-        FooterGuide
-    }
-}
+  import FooterGuide from './component/FooterGuide/FooterGuide.vue'
+  import {mapActions} from 'vuex'
+  export default {
+      components:{
+          FooterGuide
+      },
+      methods:{
+          ...mapActions(['getAddress','getShops','getUserInfo'])
+      },
+      mounted() {
+        // this.$store.dispatch('getAddress')
+        this.getAddress()
+        this.getShops()
+        this.getUserInfo()
+      }
+  }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -19,5 +29,4 @@ export default {
     width 100%
     height 100%
     background #f5f5f5
-
 </style>
